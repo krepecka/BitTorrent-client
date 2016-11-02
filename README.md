@@ -1,6 +1,6 @@
 ﻿# BitTorrent protocol implementation
 
-### First real program written in node
+#### First real program written in node
 It takes a torrent file of <b>single file structure</b> and downloads it. 
 
 #### Note: this program can theoretically(to be frank quite often) load whole content of torrent file into RAM
