@@ -3,7 +3,7 @@
 ### First real program written in node
 It takes a torrent file of <b>single file structure</b> and downloads it. 
 
-### Note: this program can theoretically(to be frank quite often) load whole content of torrent file into RAM
+#### Note: this program can theoretically(to be frank quite often) load whole content of torrent file into RAM
 
 ### Improvements
 Program needs a lot of improvements:
