@@ -2,6 +2,7 @@
 
 var net = require('net');
 var fs = require('fs');
+var randomAccessFile = require('random-access-file');
 var pstr = "BitTorrent protocol";
 var reserved = [0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -13,11 +14,14 @@ var Connector = function (torrent) {
     this.pstrlen = pstr.length; 
 
     this.piece_index = 0;
-    this.piecesWorkedOn = []
+
+    this.piecesWorkedOn = new Array(torrent.piece_count).fill(-1);
 
     this.pieces_have = [];
     
-    this.max_peers = 50;
+    this.max_peers = 40;
+
+    this.file = randomAccessFile(torrent.name);
 
     this.connect();
 }
@@ -25,8 +29,6 @@ var Connector = function (torrent) {
 Connector.prototype.connect = function () {
     var peers = this.torrent.peers;
 
-    var a = new Buffer(reserved);
-    var b = new Buffer(pstr);
     var pstrLenBuff = new Buffer([19]);
     var pstrBuff = new Buffer(pstr);
     var reservedBuff = new Buffer(reserved);
@@ -35,7 +37,7 @@ Connector.prototype.connect = function () {
 
     var messageBuffer = Buffer.concat([pstrLenBuff, pstrBuff, reservedBuff, hashBuff, peer_idBuff]);
 
-    for (var i = 0; i < this.max_peers; i++){
+    for (var i = 0; i < peers.length; i++){
         peers[i].conn = this;
         peers[i].handshake(messageBuffer);    
     }
@@ -49,6 +51,7 @@ Connector.prototype.onhandshake = function (peer) {
     peer.on('unchoke', () => {
         var index, begin;
         index = self.pickPiece();
+
         //value of a piece amount done
         begin = self.piecesWorkedOn[index];
 
@@ -56,8 +59,7 @@ Connector.prototype.onhandshake = function (peer) {
     });
 
     peer.on('block', (block) => {
-        console.log('got block. Piece ' + block.piece + ' length ' + block.data.length);
-
+        //console.log('got block. Piece ' + block.piece + ' length ' + block.data.length);
 
         if (typeof self.pieces_have[block.piece] === 'undefined') {
             self.pieces_have[block.piece] = [];
@@ -69,34 +71,32 @@ Connector.prototype.onhandshake = function (peer) {
         self.pieces_have[block.piece] = Buffer.concat([buff, buff1]);
 
         self.piecesWorkedOn[block.piece] += block.data.length;
-        console.log('TOTAL piece ' + block.piece + ' : ' + self.piecesWorkedOn[block.piece]);
+        //console.log('TOTAL piece ' + block.piece + ' : ' + self.piecesWorkedOn[block.piece]);
+
+        var piece_done = self.pieces_have[block.piece].length
+
+        //PIECE FINISHED
         if (self.piecesWorkedOn[block.piece] === this.torrent.piece_length) {
             //TODO check piecehashc check
             //TODO Figure how to get not full piece
             
-            fs.appendFileSync('aa.txt', 'PIECE ' + block.piece + ' is finished\r\n')
+            fs.appendFileSync('aa.txt', 'PIECE ' + block.piece +' '+ this.torrent.piece_length + ' is finished\r\n')
 
             //self.pieces_have[block.piece] += block.data;
 
             if (block.piece === 1) {
                 console.log('');
             }
-
-            for (var i = 0; i <= self.torrent.piece_count; i++) {
-                if (self.piecesWorkedOn[i] !== self.torrent.piece_length)
-                    break;
-                else if (/*self.piecesWorkedOn[i] === -1 &&*/ self.pieces_have[i] !== -1) {
-                    fs.appendFileSync(self.torrent.name, self.pieces_have[i]);
-                    self.pieces_have[i] = -1;
-                }
-            }
-            //self.piecesWorkedOn[block.piece] = -1;
-
+            
+            this.file.write(block.piece * this.torrent.piece_length, self.pieces_have[block.piece]);
+            self.pieces_have[block.piece] = null;
 
             //Get new piece and go from there
             var index, begin;
             index = self.pickPiece();
-            begin = self.piecesWorkedOn[index];
+            // console.log('o: ' + self.piecesWorkedOn[index])
+            // console.log('p: ' + piece_done)
+            begin = self.piecesWorkedOn[index]//piece_done;
 
             peer.request(index, begin, BLOCK_LENGTH);
             
@@ -109,10 +109,12 @@ Connector.prototype.onhandshake = function (peer) {
 
 //TODO implement some kind of algorithm to pick pieces better. PRIORITY
 Connector.prototype.pickPiece = function () {
+
     //Sent index of a piece that wasnt worked on at all
-    for (var i = 0; i < this.torrent.piece_count; i++) {
-        if (typeof this.piecesWorkedOn[i] === 'undefined') {
+    for (i = 0; i < this.torrent.piece_count; i++) {
+        if (this.piecesWorkedOn[i] === -1) {
             this.piecesWorkedOn[i] = 0;
+            console.log('Finished index: ' + i);
             return i;
         }
         //else if (this.piecesWorkedOn[i] !== -1) {
@@ -122,8 +124,12 @@ Connector.prototype.pickPiece = function () {
 
     //Else sent an unfinished piece index
     for (var i = 0; i < this.torrent.piece_count; i++) {
-        if (this.piecesWorkedOn[i] !== -1)
+        //console.log(this.piecesWorkedOn[i])
+        if (this.piecesWorkedOn[i] !== -1){
+            console.log('Unfinished index: ' + i);
+            this.pieces_have[i] = undefined;
             return i;
+        }   
     }
 }
 

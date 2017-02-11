@@ -4,3 +4,5 @@ test
 BitTorrent.njsproj
 typings
 typings.json
+.vscode
+jsconfig.json

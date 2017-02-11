@@ -73,6 +73,7 @@ Peer.prototype.handshake = function (handshake) {
     
     socket.on('end', function () {
         console.log('Ended connection with ' + self.ip + ":" + self.port);
+        //notify connector that the piece this peer worked on is done
         socket.destroy();
     });
     
@@ -83,6 +84,7 @@ Peer.prototype.handshake = function (handshake) {
     
     socket.on('error', function (err) {
         console.log('Error with ' + self.ip + ":" + self.port + '. Type :' + err.code);
+        //notify connector that the piece this peer worked on is done
     });      
 }
 
@@ -156,7 +158,7 @@ Peer.prototype.parseMessage = function (message) {
         case 4:
             self._onhave(buffer.readUInt32BE(1));
             break;
-         //Doens't matter
+         //Does not matter
         //case 5:
         //    self._onbitfield(buffer.slice(1));
         //    break;
