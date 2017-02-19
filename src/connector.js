@@ -153,9 +153,7 @@ Connector.prototype.renewPieces = function (self) {
         }
     }
 
-    for (var i = 0; i < self.peers.length; i++) {
-        self.peer_unchocked(self.peers[i]);
-    }
+    self.peers.map(peer => self.peer_unchocked(peer));
 }
 
 module.exports = Connector;
