@@ -57,7 +57,7 @@ TorrentFile.prototype.readData = function () {
 	this.name = decoded.info.name;
     this.piece_length = decoded.info["piece length"];
 
-    this.piece_count = 50//Math.ceil(this.file_length / this.piece_length)
+    this.piece_count = Math.ceil(this.file_length / this.piece_length)
 
 	this.getTrackerInfo();
 }

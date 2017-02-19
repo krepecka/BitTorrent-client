@@ -30,12 +30,9 @@ var Peer = function (ip, port, num) {
 
     this.socket = net.Socket();
 
-    this.conn;
-    this.RequestQueue;
-
     this.curr_block_l = 0;
     this.curr_block = [];
-    this.curr_index = 0;
+    this.curr_index = -1;
 }
 
 util.inherits(Peer, EventEmitter);
@@ -55,17 +52,16 @@ Peer.prototype.handshake = function (handshake) {
     });
     
     socket.on('data', function (chunk) {
-        //shake my hand, mate
         if (!self.handshook) {
             self.handshook = self.checkHandshake(handshake, chunk);
             if (!self.handshook) {
                 console.log(self.ip + " : " + self.port + " send incorrect handshake");
                 socket.destroy();
-                return;
+
             } else {
                 fs.appendFileSync('aa.txt', self.ip + ':' + self.port+ '\r\n');
-            }
-            self.conn.onhandshake(self);
+                self.emit('handshook');
+            }            
         } else {
             self.parseMessage(chunk);
         }
@@ -73,25 +69,22 @@ Peer.prototype.handshake = function (handshake) {
     
     socket.on('end', function () {
         console.log('Ended connection with ' + self.ip + ":" + self.port);
-        //notify connector that the piece this peer worked on is done
-        socket.destroy();
+        console.log('piece ' + self.curr_index)
     });
     
     
     socket.on('timeout', function () {
         console.log('timedout');
+        console.log('piece ' + self.curr_index)
     });
     
     socket.on('error', function (err) {
         console.log('Error with ' + self.ip + ":" + self.port + '. Type :' + err.code);
-        //notify connector that the piece this peer worked on is done
+        console.log('piece ' + self.curr_index)
     });      
 }
 
 Peer.prototype.startPiece = function (index, begin, length) {
-    var self = this;
-    var socket = this.socket;
-
     if (this.peer_choking) {
         this.sendmessage(MSG_INTERESTED);
     }    
@@ -199,7 +192,8 @@ Peer.prototype.checkHandshake = function (handshake, received) {
 }
 
 Peer.prototype.request = function (index, offset, length) {
-    if (this.peer_choking) console.error(this.ip + ':' + this.port + " is choking. Cant send request");
+    if (this.peer_choking) 
+        console.error(this.ip + ':' + this.port + " is choking. Cant send request");
 
     this.curr_block = [];
     this.curr_index = index;
@@ -209,7 +203,7 @@ Peer.prototype.request = function (index, offset, length) {
     //<len=0013><id=6><index><begin><length>
     buffer.writeInt32BE(13, 0);
     buffer.writeUInt8(6, 4);
-    buffer.writeInt32BE(index, 5);
+    buffer.writeInt32BE(index, 5);// piece that is being worked with
     buffer.writeInt32BE(offset, 9);
     buffer.writeInt32BE(length, 13);
 
@@ -283,6 +277,11 @@ Peer.prototype._oncancel = function () {
 
 Peer.prototype._unknown = function (buffer) {
     //console.log(this.ip + ' : ' + this.port + 'unknown: ' + buffer);
+}
+
+Peer.prototype.connection_dropped = function(){
+    this.curr_index = null;
+    this.emit('dropped');
 }
 
 module.exports = Peer;

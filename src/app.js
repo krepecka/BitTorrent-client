@@ -16,13 +16,13 @@ var torrent = new TorrentFile();
 
 console.log('Enter a .torrent full file path:');
 
-rl.on('line', function (line) {
+//rl.on('line', function (line) {
 	line = "/home//krepecka/Downloads/Ted 2 2015 NEW UNCENSORED 720p HC HDRIP x264 AC3 TiTAN.mkv.torrent";
 	if (checkFile(line)) {
         torrent.path = line;
 		torrent.readData();
 	}
-});
+// });
 
 torrent.on('ready', function () {
     var connector = new Connector(torrent);   
