@@ -13,7 +13,6 @@ var rl = readline.createInterface({
 
 var torrent = new TorrentFile();
 
-
 console.log('Enter a .torrent full file path:');
 
 //rl.on('line', function (line) {

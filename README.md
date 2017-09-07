@@ -7,7 +7,8 @@ It takes a torrent file of <b>single file structure</b> and downloads it.
 Program needs a lot of improvements:
 <ul>
     <li>Support for multiple files torrent file structure</li>
-    <li>Bunch of other stuff that I can't remember right now</li>
+    <li><strike>Bunch of other stuff that I can't remember right now</strike></li>
     <li>Reafactor code to have somekind of logical design</li>
+    <li>Give it some UI</li>
 </ul>
 

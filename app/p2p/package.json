@@ -1,0 +1,26 @@
+{
+  "name": "bittorrent",
+  "version": "0.0.1",
+  "description": "BitTorrent protocol realization",
+  "main": "app.js",
+  "dependencies": {
+    "bencode": "^0.10.0",
+    "colors": "^1.1.2",
+    "crypto": "^0.0.3",
+    "random-access-file": "^1.4.0",
+    "urlencode": "^1.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.0.2"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node src/app.js"
+  },
+  "keywords": [
+    "BitTorrent",
+    "protocol"
+  ],
+  "author": "Kristupas Repečka",
+  "license": "MIT"
+}
