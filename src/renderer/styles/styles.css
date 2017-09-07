@@ -1,0 +1,19 @@
+html, body, #app {
+  height: 100%;
+  font-size: 14.5px;
+}
+
+.torrent-item{
+  display: inline-block;
+  margin-left: 20px;
+  padding: 10px;
+  width: 150px;
+  height: 230px;
+  vertical-align: top;
+  position: relative;
+}
+
+.card-action{
+  position: absolute;
+  bottom: 10px;
+}
