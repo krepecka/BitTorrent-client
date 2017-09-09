@@ -82,13 +82,13 @@ TorrentFile.prototype.getTrackerInfo = function () {
             });
 
             response.on('end', function () {
-                console.log(respData);
+                //console.log(respData);
                 var buff = new Buffer(respData);
                 var str = buff.toString()
                 var decoded = bencode.decode(respData);
                 
                 if (typeof decoded["failure reason"] !== 'undefined') {
-                    console.log("Failed to get response from tracker : " + decoded["failure reason"]);
+                    //console.log("Failed to get response from tracker : " + decoded["failure reason"]);
                 }
                 
                 me.traker_min_interval = decoded["min interval"];
@@ -97,10 +97,10 @@ TorrentFile.prototype.getTrackerInfo = function () {
                 me.createPeers(decoded.peers);
             });
 		}).on('error', function (err) {
-			console.log(err);
+			//console.log(err);
 		});
 	}catch (e) { 
-		console.log('Error trying to send a request : ' + e);
+		//console.log('Error trying to send a request : ' + e);
 	}
 }
 

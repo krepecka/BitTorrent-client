@@ -17,3 +17,41 @@ html, body, #app {
   position: absolute;
   bottom: 10px;
 }
+
+.add-area{
+  box-shadow:inset 0px 0px 0px 10px #26a69a;
+  /* color: #26a69a; */
+  z-index: 100;
+  transition: 0.7s;
+}
+
+.add-area-plus{
+  color: #26a69a;
+  pointer-events: none;
+  font-size: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  transition: 0.7s;
+}
+
+.add-area-hover{
+  box-shadow:inset 0px 0px 0px 8px #33c7b9;
+}
+
+.add-area-plus-hover{
+  color: #33c7b9;
+  font-size: 120px;
+}
+
+.add-area-input{
+  cursor: pointer;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+}

@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>JATK - Just Another Torrent Client</title>
-    <!-- <link type="text/css" rel="stylesheet" href="styles/materialize/css/materialize.css"  media="screen,projection"/> -->
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>JATK - Just Another Torrent Client</title>
+  <!-- <link type="text/css" rel="stylesheet" href="styles/materialize/css/materialize.css"  media="screen,projection"/> -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app"></div>
+</body>
+<script>
+  document.addEventListener('dragover', function (event) {
+    event.preventDefault();
+    return false;
+  }, false);
+
+  document.addEventListener('drop', function (event) {
+    event.preventDefault();
+    return false;
+  }, false);
+
+</script>>
+
 </html>

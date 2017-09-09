@@ -72,7 +72,7 @@ Connector.prototype.peer_master = function (peer) {
     });
 
     peer.on('dropped', function () {
-        console.log('DROPPED' + this.curr_index)
+        //console.log('DROPPED' + this.curr_index)
         self.pieces[this.curr_index].piece_busy = false;
     });
 
@@ -85,7 +85,7 @@ Connector.prototype.peer_master = function (peer) {
         self.pieces[block.piece].piece_data = Buffer.concat([buff, buff1]);
         piece.piece_done += block.data.length;
 
-        console.log('TOTAL piece ' + block.piece + ' : ' + piece.piece_done);
+        //console.log('TOTAL piece ' + block.piece + ' : ' + piece.piece_done);
 
         //PIECE FINISHED
         if (piece.piece_done === this.torrent.piece_length) {

@@ -8,13 +8,13 @@ const PercentageIndicator = (props) => {
             data: [props.value, 100 - props.value],
             backgroundColor: [
                 '#26a69a',
-                '#616161',
+                'transparent',
             ],
             borderWidth: 1,
             borderColor: '#575757',
             hoverBackgroundColor: [
                 '#33c7b9',
-                '#616161'
+                'transparent'
             ]
         }]
     };

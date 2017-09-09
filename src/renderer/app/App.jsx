@@ -1,7 +1,10 @@
 import React from 'react';
 
-import MainArea from '../components/subcontainers/MainArea';
-import InfoArea from '../components/subcontainers/InfoArea';
+import GrandContainer from './containers/GrandContainer';
+
+import TorrentStore from './stores/TorrentStore';
+
+const torrentStore = new TorrentStore();
 
 const mockItems = [
     { torrentName: 'Debian 9', percentageDone: 55, status: 'DOWNLOADING' },
@@ -11,13 +14,12 @@ const mockItems = [
     { torrentName: 'Kids, use steam', percentageDone: 100, status: 'DONE' },
 ]
 
-export default class GrandContainer extends React.Component {
-    render() {
-        return (
-            <div className="row" style={{height: '100%'}}>
-                <MainArea items={mockItems}/>
-                <InfoArea />
-            </div>
-        )
-    }
+torrentStore.loadInitialState(mockItems);
+
+const App = () => {
+    return (
+        <GrandContainer store={torrentStore}/>
+    )
 }
+
+export default App;

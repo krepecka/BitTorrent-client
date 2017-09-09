@@ -9,12 +9,11 @@ export default class TorrentControl extends React.Component {
     render() {
         const { torrentName, percentageDone, status } = this.props;
         return (
-
             <div className="card-panel grey darken-2 torrent-item" role="button">
                 <div className="card-content white-text">
                     <span className="card-title"><b>{torrentName}</b></span>
                     {/* <p>done: {percentageDone}, status: {status}</p> */}
-                    <PercentageIndicator value={percentageDone}/>
+                    <PercentageIndicator value={percentageDone} />
                 </div>
                 <div className="card-action">
                     <a className="waves-effect waves-light btn">remove</a>

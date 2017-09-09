@@ -17,7 +17,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://127.0.0.1:8080',
     'webpack/hot/dev-server',
-    './src/renderer/index.js'
+    './src/renderer/app/index.js'
   ],
   output: {
     path: __dirname + '/dist',
@@ -39,7 +39,8 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: ['es2015', 'react', 'stage-0']
+          presets: ['es2015', 'react', 'stage-0', 'stage-1'],
+          plugins: ["transform-decorators-legacy"]
         },
       },
       {
