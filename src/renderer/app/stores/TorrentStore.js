@@ -1,4 +1,5 @@
 import { observable } from 'mobx';
+import { ipcRenderer } from 'electron';
 
 
 class TorrentStore {
@@ -7,6 +8,8 @@ class TorrentStore {
     addTorrent(newItem){
         console.log(newItem)
         this.torrents.push(newItem);
+
+        ipcRenderer.send('new-torrent-added', newItem);
     }
 
     loadInitialState(items){

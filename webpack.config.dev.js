@@ -19,6 +19,7 @@ module.exports = {
     'webpack/hot/dev-server',
     './src/renderer/app/index.js'
   ],
+  target: 'electron',
   output: {
     path: __dirname + '/dist',
     filename: 'bundle.js',
