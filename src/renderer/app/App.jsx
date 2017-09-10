@@ -5,6 +5,7 @@ import GrandContainer from './containers/GrandContainer';
 import TorrentStore from './stores/TorrentStore';
 
 const torrentStore = new TorrentStore();
+torrentStore.bindEvents();
 
 const mockItems = [
     { torrentName: 'Debian 9', percentageDone: 55, status: 'DOWNLOADING' },

@@ -1,15 +1,35 @@
 const electron = require('electron');
 const { ipcMain } = require('electron');
-// Module to control application life.
 const app = electron.app
-// Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
-
 const path = require('path')
 const url = require('url')
 
-ipcMain.on('new-torrent-added', (e, torrent) => {
-    console.log(torrent.path);
+const SingleTorrentDownloader = require('./p2p/index');
+
+const torrents = [];
+
+ipcMain.on('new-torrent-added', (e, file) => {
+    console.log(file.path);
+    //add torrent to torrents array
+
+    const torrent = new SingleTorrentDownloader(file.path);
+
+    torrent.on('torrent-data-read', (torrentData) => {
+        //add that data to store
+        e.sender.send('torrent-data-read', torrentData);
+        //change torrent status
+    })
+
+    torrent.on('block', (torrentFile) => {
+        e.sender.send('block', torrentFile);
+    })
+
+    torrent.on('error', (args) => {
+        //get which torrent that is
+        e.sender.send('error', args);//{ torrentName: torrents[0].name});
+        //set that torrent status
+    })
 })
 
 

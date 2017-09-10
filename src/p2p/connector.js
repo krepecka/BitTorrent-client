@@ -2,13 +2,16 @@
 
 var net = require('net');
 var fs = require('fs');
+var util = require('util');
+var EventEmitter = require('events').EventEmitter;
+
 var randomAccessFile = require('random-access-file');
-var pstr = "BitTorrent protocol";
+const { BLOCK_LENGTH } = require('./contants/constants');
+
+var PSRT = "BitTorrent protocol";
 var reserved = [0, 0, 0, 0, 0, 0, 0, 0];
 
 var all_pieces_touched = false;
-
-var BLOCK_LENGTH = Math.pow(2, 14);
 
 var Piece = function () {
     this.piece_data = [];
@@ -17,34 +20,31 @@ var Piece = function () {
 }
 
 var Connector = function (torrent) {
+    EventEmitter.call(this);
+
     this.torrent = torrent;
-    this.pstrlen = pstr.length;
-
+    this.PSRTlen = PSRT.length;
     this.pieces = new Array(torrent.piece_count).fill(null);
-
-    this.pieces = this.pieces.map(() => { return new Piece() });
-
+    this.pieces = this.pieces.map(() => new Piece());
     this.pieces_have = [];
-
     this.max_peers = 40;
-
     this.peers = [];
-
     this.file = randomAccessFile(torrent.name);
-
-    this.handshake = this.gen_handshake(pstr, reserved, this.torrent.info_hash_hex, this.torrent.peer_id_string);
+    this.handshake = this.gen_handshake(PSRT, reserved, this.torrent.info_hash_hex, this.torrent.peer_id_string);
 
     this.connect();
 }
 
-Connector.prototype.gen_handshake = function (pstr, reserved, info_hash, peer_id_string) {
-    var pstrLenBuff = new Buffer([19]);
-    var pstrBuff = new Buffer(pstr);
+util.inherits(Connector, EventEmitter);
+
+Connector.prototype.gen_handshake = function (PSRT, reserved, info_hash, peer_id_string) {
+    var PSRTLenBuff = new Buffer([19]);
+    var PSRTBuff = new Buffer(PSRT);
     var reservedBuff = new Buffer(reserved);
     var hashBuff = new Buffer(info_hash, 'hex');
     var peer_idBuff = new Buffer(peer_id_string, 'hex');
 
-    var messageBuffer = Buffer.concat([pstrLenBuff, pstrBuff, reservedBuff, hashBuff, peer_idBuff]);
+    var messageBuffer = Buffer.concat([PSRTLenBuff, PSRTBuff, reservedBuff, hashBuff, peer_idBuff]);
 
     return messageBuffer;
 }
@@ -77,6 +77,7 @@ Connector.prototype.peer_master = function (peer) {
     });
 
     peer.on('block', (block) => {
+        console.log('GOT BLOCK')
         var piece = self.pieces[block.piece];
 
         var buff = new Buffer(piece.piece_data);
@@ -85,7 +86,7 @@ Connector.prototype.peer_master = function (peer) {
         self.pieces[block.piece].piece_data = Buffer.concat([buff, buff1]);
         piece.piece_done += block.data.length;
 
-        //console.log('TOTAL piece ' + block.piece + ' : ' + piece.piece_done);
+        this.emit('block')
 
         //PIECE FINISHED
         if (piece.piece_done === this.torrent.piece_length) {
@@ -130,7 +131,7 @@ Connector.prototype.pickPiece = function () {
 Connector.prototype.peer_unchocked = function (peer) {
     var index, begin;
     index = this.pickPiece();
-
+    console.log('selected index' + index)
     //value of a piece amount done
     if (index !== -1) {
         begin = this.pieces[index].piece_done;

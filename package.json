@@ -39,7 +39,12 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "webpack-dev-server": "^2.7.1",
+    "bencode": "^0.10.0",
+    "colors": "^1.1.2",
+    "crypto": "^0.0.3",
+    "random-access-file": "^1.4.0",
+    "urlencode": "^1.1.0"
   },
   "dependencies": {
     "chart.js": "^2.6.0",

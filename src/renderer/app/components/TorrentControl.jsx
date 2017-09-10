@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
 
 import PercentageIndicator from './PercentageIndicator';
 
 import torrentStatus from '../constants/torrentStatus';
 
-export default class TorrentControl extends React.Component {
+@observer
+class TorrentControl extends React.Component {
     render() {
         const { torrentName, percentageDone, status } = this.props;
         return (
@@ -28,3 +30,5 @@ TorrentControl.propTypes = {
     percentageDone: PropTypes.number.isRequired,
     status: PropTypes.oneOf(torrentStatus).isRequired
 }
+
+export default TorrentControl;
