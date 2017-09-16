@@ -39,4 +39,4 @@ npm run electron
     <li>Support uploading.</li>
 </ul>
 
-![add torrent](https://github.com/krepecka/BitTorrent-client/gifs/add_torrent.gif "Add Torrent")
+![add torrent](https://github.com/krepecka/BitTorrent-client/blob/master/gifs/add_torrent.gif?raw=true "Add Torrent")
