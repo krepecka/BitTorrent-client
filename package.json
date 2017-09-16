@@ -1,7 +1,7 @@
 {
   "name": "bit-torrent-client",
   "version": "1.0.0",
-  "description": "#### First real program written in node It takes a torrent file of <b>single file structure</b> and downloads it.",
+  "description": "",
   "main": "webpack.config.dev.js",
   "scripts": {
     "start": "webpack-dev-server --config webpack.config.dev.js",

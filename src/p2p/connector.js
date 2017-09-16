@@ -93,8 +93,6 @@ Connector.prototype.peer_master = function (peer) {
             //TODO check piecehashc check
             //TODO Figure how to get not full piece
 
-            fs.appendFileSync('aa.txt', 'PIECE ' + block.piece + ' ' + this.torrent.piece_length + ' is finished\r\n')
-
             this.file.write(block.piece * this.torrent.piece_length, piece.piece_data);
             piece.piece_data = [];
 

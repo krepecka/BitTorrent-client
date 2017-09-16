@@ -59,7 +59,6 @@ Peer.prototype.handshake = function (handshake) {
                 socket.destroy();
 
             } else {
-                fs.appendFileSync('aa.txt', self.ip + ':' + self.port+ '\r\n');
                 self.emit('handshook');
             }            
         } else {
