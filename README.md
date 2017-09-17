@@ -21,13 +21,13 @@ In separate terminal session:
 npm run electron
 ```
 
-### Improvements
+### Improvements (TO DOs)
 <ul>
     <li>Support for multiple files torrent file structure.</li>
     <li>Show extensive information about download status:
         <ul>
             <li>Total pieces, done pieces.</li>
-            <li>Speen in kB/s.</li>
+            <li>Speed in kB/s.</li>
             <li>Peer information (country, speed).</li>
             <li>Total blocks, done block.</li>
         </ul>
